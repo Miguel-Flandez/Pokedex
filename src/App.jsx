@@ -3,13 +3,22 @@ import './App.css'
 
 function App() {
 
-  const [dex, setDex] = useState(0)
+  const [dex, setDex] = useState([])
 
   useEffect(()=>{
     async function getPokemon() {
-      const res = await fetch('https://pokeapi.co/api/v2/pokemon')
+      let link = 'https://pokeapi.co/api/v2/pokemon'
+      let allPokemon = []
+
+      while(link){
+      const res = await fetch(link)
       const data = await res.json()
-      setDex(data)
+
+      allPokemon = [...allPokemon, ...data.results]
+      link = data.next;
+      }
+      
+      setDex(allPokemon)
     }
     getPokemon()
   },[])
@@ -30,8 +39,8 @@ function App() {
         </div> */}
         <div id="pokemon-list" className='border-2 border-black w-1/2 rounded-md flex flex-col overflow-y-auto' >
 
-          {dex?.results?.map((pokemon, index)=>{
-            return <div key={index}>{pokemon.name}</div>
+          {dex.map((pokemon, index)=>{
+            return <div key={index}>{pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
           })}
 
         </div>
