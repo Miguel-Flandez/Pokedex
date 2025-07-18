@@ -4,6 +4,22 @@ import './App.css'
 function App() {
 
   const [dex, setDex] = useState([])
+  const [pokeData, setPokeData] = useState()
+  const [selected, setSelected] = useState('bulbasaur');
+
+  useEffect(()=>{
+
+    async function pokemonData() {
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`)
+      const data = await res.json();
+
+      setPokeData(data)
+      console.log(data?.abilities?.[0]?.ability?.name)
+    }
+
+    pokemonData()
+  },[selected])
+
 
   useEffect(()=>{
     async function getPokemon() {
@@ -40,7 +56,7 @@ function App() {
         <div id="pokemon-list" className='border-2 border-black w-1/2 rounded-md flex flex-col overflow-y-auto' >
 
           {dex.map((pokemon, index)=>{
-            return <div key={index}>{pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
+            return <div className={`${selected===pokemon.name? 'bg-red-400':''} cursor-pointer`} onClick={()=>setSelected(pokemon.name)} key={index}>{pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
           })}
 
         </div>
