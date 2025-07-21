@@ -1,1 +1,20 @@
-@import 'tailwindcss'
+@import 'tailwindcss';
+
+*{
+    font-family: 'PKMN' !important;
+}
+
+body{
+    background-image: url('/images/grid-bg.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+@font-face {
+  font-family: 'PKMN';
+  src: url('/fonts/PKMN RBYGSC.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
