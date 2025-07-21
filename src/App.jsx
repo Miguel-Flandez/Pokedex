@@ -44,22 +44,22 @@ function App() {
 
   return (
     <div>
-      <header  header className="py-2 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex justify-center items-center"
+      <header  header className="py-2 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex justify-center items-center border-b-3 border-black"
       style={{textShadow: '2px 2px 6px black'}}>
           Pokédex
       </header>
       <div className="flex py-4 px-2 h-[540px]">
         <div id="basic-info" className=' flex flex-col  items-center w-1/2 gap-30'>
-          <div id="pokemon-name" className='flex border-2 rounded-md px-6 py-2'>
+          <div id="pokemon-name" className='bg-white flex border-3 rounded-md px-6 py-2'>
               <span>{ selected.replace(/^\w/, c=>c.toUpperCase())|| 'Ditto...'}</span>  
           </div>
           <img src={ pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-50 h-50' />
           
         </div> 
-        <div id="pokemon-list" className='border-2 border-black w-1/2 rounded-md flex flex-col overflow-y-auto' >
+        <div id="pokemon-list" className='border-3 border-black bg-white w-1/2 rounded-md flex flex-col gap-2 overflow-y-auto px-1' >
 
           {dex.map((pokemon, index)=>{
-            return <div className={`${selected===pokemon.name? 'bg-red-400':''} cursor-pointer`} onClick={()=>setSelected(pokemon.name)} key={index}>{pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
+            return <div className={`${selected===pokemon.name? 'border-3 border-red-400 rounded-lg':''} cursor-pointer p-1`} onClick={()=>setSelected(pokemon.name)} key={index}>{ pokemon.url.split('/').filter(Boolean).pop() + ' ' + pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
           })}
 
         </div>
