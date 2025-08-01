@@ -6,6 +6,7 @@ function App() {
 const [dex, setDex] = useState([])
   const [pokeData, setPokeData] = useState()
   const [selected, setSelected] = useState('arceus');
+  const [page, setPage] = useState(1)
   const [main, setMain] = useState(true);
 
   const inputRef = useRef(null)
@@ -13,7 +14,6 @@ const [dex, setDex] = useState([])
   
 
   let cries = new Audio()
-
 
   useEffect(()=>{
 
@@ -101,11 +101,11 @@ const [dex, setDex] = useState([])
       <div id="details" class>
         <header className="py-2 px-8 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex items-center border-b-3 border-black cursor-pointer">
           <div className='flex gap-16'>
-            <div className='hover:text-black'>◀</div>
-            <span className='hover:text-black'>DETAILS</span>
-            <span className='hover:text-black'>AREA</span>
-            <span className='hover:text-black'>FORMS</span>
-            <div className='hover:text-black'>▶</div>
+            <div className='hover:text-black' onClick={()=>setPage(prev=> page!==1 ? prev-1 : prev)}>◀</div>
+            <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>setPage(1)}>DETAILS</span>
+            <span className={`${page === 2 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>setPage(2)}>AREA</span>
+            <span className={`${page === 3 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>setPage(3)}>FORMS</span>
+            <div className='hover:text-black' onClick={()=>setPage(prev=> page!==3 ? prev+1 : prev)}>▶</div>
           </div>
 
           <div>
@@ -114,19 +114,33 @@ const [dex, setDex] = useState([])
           
         </header>
 
-        <div className='flex'>
+        <div id='details-content' className='flex flex-col'>
+          <div id="details-content-top" className='flex gap-60 mt-2'>
+            <div id="left" className='relative'>
+              <div id='back-button' className='bg-white flex absolute border-3 rounded-md m-2'> 
+                  <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
+                    <span className='py-2 px-4 border-y-3 border-red-200 hover:bg-red-200 cursor-pointer' onClick={()=>setMain(prev=>!prev)}>Back</span>
+                  <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
+              </div>
 
-        <div id="left">
-          <div className='bg-white flex border-3 rounded-md m-2'>
-              <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-              <span className='py-2 px-4 border-y-3 border-red-200 hover:bg-red-200 cursor-pointer' onClick={()=>setMain(prev=>!prev)}>Back</span>
-              <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
+              <img src={ pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-62 ml-22 mt-22' />
+            </div>
+
+            <div id="right" className=''>
+              <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white'>
+                <div className='bg-red-500 border-b-3 border-red-200 h-8 py-1 px-6 text-white'>
+                  asd
+                </div>
+                <span className='py-1 px-6'>asdasd</span>
+                
+              </div>
+            </div>
+
           </div>
-        </div>
-
-        <div id="right">
-        </div>
-
+          <div id="details-content-bottom">
+            asdasd
+          </div>
+      
         </div>
 
         
