@@ -5,6 +5,7 @@ function App() {
 
 const [dex, setDex] = useState([])
   const [pokeData, setPokeData] = useState()
+  const [speciesData, setSpeciesData] = useState()
   const [selected, setSelected] = useState('arceus');
   const [page, setPage] = useState(1)
   const [main, setMain] = useState(true);
@@ -18,11 +19,15 @@ const [dex, setDex] = useState([])
   useEffect(()=>{
 
     async function pokemonData() {
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`)
-      const data = await res.json();
+      const [pokeres, speciesres]= await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`), fetch(`https://pokeapi.co/api/v2/pokemon-species/${selected}`)])
 
-      setPokeData(data)
-      cries.src = data?.cries.latest
+      const pokedata = await pokeres.json();
+      const speciesdata = await speciesres.json()
+
+      setPokeData(pokedata)
+      setSpeciesData(speciesdata)
+
+      cries.src = pokedata?.cries.latest
       cries.play()
     }
 
@@ -128,10 +133,11 @@ const [dex, setDex] = useState([])
 
             <div id="right" className=''>
               <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white'>
-                <div className='bg-red-500 border-b-3 border-red-200 h-8 py-1 px-6 text-white'>
-                  asd
+                <div className='bg-red-500 flex gap-2 border-b-3 border-red-200 h-8 py-1 px-6 text-white'>
+                  <span>{String(pokeData?.id).padStart(3, '0')}</span>
+                  <span>{selected.replace(/^\w/, c=>c.toUpperCase())}</span>
                 </div>
-                <span className='py-1 px-6'>asdasd</span>
+                <span className='py-1 px-6'>{speciesData?.genera[7].genus}</span>
                 
               </div>
             </div>
