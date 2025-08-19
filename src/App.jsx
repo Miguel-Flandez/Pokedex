@@ -11,10 +11,30 @@ const [dex, setDex] = useState([])
   const [main, setMain] = useState(true);
 
   const inputRef = useRef(null)
-
   
-
   let cries = new Audio()
+
+  const typeColors = {
+  normal: "bg-gray-400",
+  fire: "bg-red-500",
+  water: "bg-blue-500",
+  electric: "bg-yellow-400",
+  grass: "bg-green-500",
+  ice: "bg-cyan-300",
+  fighting: "bg-red-700",
+  poison: "bg-purple-500",
+  ground: "bg-yellow-600",
+  flying: "bg-indigo-300",
+  psychic: "bg-pink-500",
+  bug: "bg-lime-500",
+  rock: "bg-yellow-700",
+  ghost: "bg-indigo-700",
+  dragon: "bg-purple-700",
+  dark: "bg-gray-700",
+  steel: "bg-gray-500",
+  fairy: "bg-pink-300"
+};
+
 
   useEffect(()=>{
 
@@ -103,7 +123,7 @@ const [dex, setDex] = useState([])
       
 
       {!main && 
-      <div id="details" class>
+      <div id="details">
         <header className="py-2 px-8 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex items-center border-b-3 border-black cursor-pointer">
           <div className='flex gap-16'>
             <div className='hover:text-black' onClick={()=>setPage(prev=> page!==1 ? prev-1 : prev)}>◀</div>
@@ -131,20 +151,28 @@ const [dex, setDex] = useState([])
               <img src={ pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-62 ml-22 mt-22' />
             </div>
 
-            <div id="right" className=''>
-              <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white'>
-                <div className='bg-red-500 flex gap-2 border-b-3 border-red-200 h-8 py-1 px-6 text-white'>
+            <div id="right" className='flex flex-col gap-16'>
+              <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white text-4xl'>
+                <div className='bg-red-500 flex gap-2 border-b-3 border-red-200  py-1 px-6 text-white'>
                   <span>{String(pokeData?.id).padStart(3, '0')}</span>
                   <span>{selected.replace(/^\w/, c=>c.toUpperCase())}</span>
                 </div>
                 <span className='py-1 px-6'>{speciesData?.genera[7].genus}</span>
                 
               </div>
+              <div id="type" className={`${typeColors[pokeData?.types[0].type.name]} border-2 border-black rounded-md py-6 text-white text-center text-4xl`}>
+                <span id="type" className=''>
+                {pokeData?.types[0].type.name.replaceAll(/[A-Za-z]/g, c=>c.toUpperCase())}
+                </span>
+              </div>
+              
             </div>
 
           </div>
-          <div id="details-content-bottom">
-            asdasd
+          <div id="details-content-bottom" className='rounded-md border-2 border black mx-2 mb-2 flex justify-between bg-white'>
+            <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
+            <span className='border-y-2 border-red-200 text-center w-full pt-2 h-45'>{speciesData?.['flavor_text_entries'][21]['flavor_text']}</span>
+            <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
         </div>
