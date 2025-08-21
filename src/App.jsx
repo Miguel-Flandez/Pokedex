@@ -47,10 +47,10 @@ const [dex, setDex] = useState([])
       setPokeData(pokedata)
       setSpeciesData(speciesdata)
 
-      cries.src = pokedata?.cries.latest
-      cries.play()
+      cries.src = pokedata?.cries?.latest || ''
+      cries.play().catch(()=>{})
     }
-
+    console.log(selected  )
     pokemonData()
   },[selected])
 
@@ -87,13 +87,13 @@ const [dex, setDex] = useState([])
             <div id="pokemon-name" className='bg-white flex border-3 rounded-md'>
                 <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
                 <input ref={inputRef} className='py-2 px-4 border-y-3 border-red-200 placeholder-black text-center' 
-                placeholder={selected.replace(/^\w/, c=>c.toUpperCase()).replaceAll('-', ' ') || 'Ditto...'}
+                placeholder={selected?.replace(/^\w/, c=>c.toUpperCase()).replaceAll('-', ' ') || 'Ditto...'}
                 onKeyDown={e => e.key==='Enter'? setSelected(inputRef.current.value):null}
                 type="text" />
                 {/* <span className='py-2 px-4 border-y-3 border-red-200'>{ selected.replace(/^\w/, c=>c.toUpperCase()).replaceAll('-', ' ') || 'Ditto...'}</span>   */}
                 <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
             </div>
-            <img src={ pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-50 h-50' />
+            <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-50 h-50' />
             <div className='bg-white flex border-3 rounded-md'>
               <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
               <span className='py-2 px-4 border-y-3 border-red-200 hover:bg-red-200 cursor-pointer' onClick={()=>setMain(prev=>!prev)}>Details</span>
@@ -105,7 +105,7 @@ const [dex, setDex] = useState([])
             {dex.length ? 
             dex.map((pokemon, index)=>{
 
-              const  group = <div className={`${selected===pokemon.name? 'border-3 border-red-400 rounded-lg':''} cursor-pointer p-1`} onClick={()=>setSelected(pokemon.name)} key={index}>{ pokemon.url.split('/').filter(Boolean).pop() + ' ' + pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
+              const  group = <div className={`${selected===pokemon.name? 'border-3 border-red-400 rounded-lg':''} cursor-pointer p-1`} onClick={()=>setSelected(pokemon.name)} key={index}>{  pokemon.url.split('/').filter(Boolean).pop() + ' ' + pokemon.name.replaceAll('-', ' ').replace(/^\w/, c=>c.toUpperCase())}</div>
             
               return group
             })
@@ -148,21 +148,21 @@ const [dex, setDex] = useState([])
                   <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
               </div>
 
-              <img src={ pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || pokeData?.sprites.versions['generation-v']['black-white']['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-62 ml-22 mt-22' />
+              <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-62 ml-22 mt-22' />
             </div>
 
             <div id="right" className='flex flex-col gap-16'>
               <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white text-4xl'>
                 <div className='bg-red-500 flex gap-2 border-b-3 border-red-200  py-1 px-6 text-white'>
                   <span>{String(pokeData?.id).padStart(3, '0')}</span>
-                  <span>{selected.replace(/^\w/, c=>c.toUpperCase())}</span>
+                  <span>{selected?.replace(/^\w/, c=>c.toUpperCase())}</span>
                 </div>
-                <span className='py-1 px-6'>{speciesData?.genera[7].genus}</span>
+                <span className='py-1 px-6'>{speciesData?.genera?.[7]?.genus}</span>
                 
               </div>
-              <div id="type" className={`${typeColors[pokeData?.types[0].type.name]} border-2 border-black rounded-md py-6 text-white text-center text-4xl`}>
+              <div id="type" className={`${typeColors[pokeData?.types?.[0]?.type?.name]} border-2 border-black rounded-md py-6 text-white text-center text-4xl`}>
                 <span id="type" className=''>
-                {pokeData?.types[0].type.name.replaceAll(/[A-Za-z]/g, c=>c.toUpperCase())}
+                {pokeData?.types?.[0]?.type?.name?.replaceAll(/[A-Za-z]/g, c=>c.toUpperCase())}
                 </span>
               </div>
               
@@ -171,7 +171,7 @@ const [dex, setDex] = useState([])
           </div>
           <div id="details-content-bottom" className='rounded-md border-2 border black mx-2 mb-2 flex justify-between bg-white'>
             <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-            <span className='border-y-2 border-red-200 text-center w-full pt-2 h-45'>{speciesData?.['flavor_text_entries'][21]['flavor_text']}</span>
+            <span className='border-y-2 border-red-200 text-center text-3xl w-full p-4 h-45'>{speciesData?.['flavor_text_entries']?.find(ft=>ft.language.name==='en')?.['flavor_text']}</span>
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
