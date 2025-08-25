@@ -37,6 +37,8 @@ const [dex, setDex] = useState([])
 
 
   useEffect(()=>{
+    setPokeData(null)
+    setSpeciesData(null)
 
     async function pokemonData() {
       const [pokeres, speciesres]= await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`), fetch(`https://pokeapi.co/api/v2/pokemon-species/${selected}`)])
@@ -50,7 +52,9 @@ const [dex, setDex] = useState([])
       cries.src = pokedata?.cries?.latest || ''
       cries.play().catch(()=>{})
     }
-    console.log(selected  )
+    console.log(selected)
+    console.log(pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'])
+    console.log(String(pokeData?.id).padStart(3, '0'))
     pokemonData()
   },[selected])
 
@@ -154,13 +158,13 @@ const [dex, setDex] = useState([])
             <div id="right" className='flex flex-col gap-16'>
               <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white text-4xl'>
                 <div className='bg-red-500 flex gap-2 border-b-3 border-red-200  py-1 px-6 text-white'>
-                  <span>{String(pokeData?.id).padStart(3, '0')}</span>
+                  <span>{pokeData ? String(pokeData?.id).padStart(3, '0'):''}</span>
                   <span>{selected?.replace(/^\w/, c=>c.toUpperCase())}</span>
                 </div>
-                <span className='py-1 px-6'>{speciesData?.genera?.[7]?.genus}</span>
+                <span className={`${!speciesData ? 'bg-red-500' : 'py-1 px-6'} `}>{speciesData?.genera?.[7]?.genus}</span>
                 
               </div>
-              <div id="type" className={`${typeColors[pokeData?.types?.[0]?.type?.name]} border-2 border-black rounded-md py-6 text-white text-center text-4xl`}>
+              <div id="type" className={`${typeColors[pokeData?.types?.[0]?.type?.name] || 'border-0 border-none'} border-2 border-black rounded-md py-6 text-white text-center text-4xl`}>
                 <span id="type" className=''>
                 {pokeData?.types?.[0]?.type?.name?.replaceAll(/[A-Za-z]/g, c=>c.toUpperCase())}
                 </span>
@@ -171,7 +175,7 @@ const [dex, setDex] = useState([])
           </div>
           <div id="details-content-bottom" className='rounded-md border-2 border black mx-2 mb-2 flex justify-between bg-white'>
             <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-            <span className='border-y-2 border-red-200 text-center text-3xl w-full p-4 h-45'>{speciesData?.['flavor_text_entries']?.find(ft=>ft.language.name==='en')?.['flavor_text']}</span>
+            <span className='border-y-2 border-red-200 text-center text-3xl w-full p-4 h-45'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'] || 'TBD'}</span>
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
