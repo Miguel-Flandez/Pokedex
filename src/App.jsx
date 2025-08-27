@@ -9,6 +9,7 @@ const [dex, setDex] = useState([])
   const [selected, setSelected] = useState('arceus');
   const [page, setPage] = useState(1)
   const [main, setMain] = useState(true);
+  const [details, setDetails] = useState(1);
 
   const inputRef = useRef(null)
   
@@ -128,13 +129,13 @@ const [dex, setDex] = useState([])
 
       {!main && 
       <div id="details">
-        <header className="py-2 px-8 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex items-center border-b-3 border-black cursor-pointer">
+        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' : 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' } py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
           <div className='flex gap-16'>
-            <div className='hover:text-black' onClick={()=>setPage(prev=> page!==1 ? prev-1 : prev)}>◀</div>
-            <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>setPage(1)}>DETAILS</span>
-            <span className={`${page === 2 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>setPage(2)}>AREA</span>
-            <span className={`${page === 3 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>setPage(3)}>FORMS</span>
-            <div className='hover:text-black' onClick={()=>setPage(prev=> page!==3 ? prev+1 : prev)}>▶</div>
+            <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev+1 : prev)}}>◀</div>
+            <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(1); setDetails(1);}}>DETAILS</span>
+            <span className={`${page === 2 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(2); setDetails(2);}}>AREA</span>
+            <span className={`${page === 3 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(3); setDetails(3);}}>FORMS</span>
+            <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==3 ? prev+1 : prev);setDetails(prev=>details!==3 ? prev+1 : prev)}}>▶</div>
           </div>
 
           <div>
@@ -143,6 +144,7 @@ const [dex, setDex] = useState([])
           
         </header>
 
+        {details===1 && 
         <div id='details-content' className='flex flex-col'>
           <div id="details-content-top" className='flex gap-60 mt-2'>
             <div id="left" className='relative'>
@@ -157,7 +159,8 @@ const [dex, setDex] = useState([])
 
             <div id="right" className='flex flex-col gap-16'>
               <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white text-4xl'>
-                <div className='bg-red-500 flex gap-2 border-b-3 border-red-200  py-1 px-6 text-white'>
+                <div className='bg-red-500 flex gap-2 items-center border-b-3 border-red-200  py-1 px-6 text-white'>
+                  <img src="/images/pokeball.png" alt="" id="pokeball" className='w-10 h-10'/>
                   <span>{pokeData ? String(pokeData?.id).padStart(3, '0'):''}</span>
                   <span>{selected?.replace(/^\w/, c=>c.toUpperCase())}</span>
                 </div>
@@ -179,7 +182,7 @@ const [dex, setDex] = useState([])
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
-        </div>
+        </div>}
 
         
 
