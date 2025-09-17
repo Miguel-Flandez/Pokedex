@@ -7,6 +7,9 @@ const [dex, setDex] = useState([])
   const [pokeData, setPokeData] = useState()
   const [speciesData, setSpeciesData] = useState()
   const [selected, setSelected] = useState('arceus');
+  const [preEvo, setPreEvo] = useState()
+  const [currentEvo, setCurrentEvo] = useState()
+  const [evo, setEvo] = useState()
   const [page, setPage] = useState(1)
   const [main, setMain] = useState(true);
   const [details, setDetails] = useState(1);
@@ -40,20 +43,48 @@ const [dex, setDex] = useState([])
   useEffect(()=>{
     setPokeData(null)
     setSpeciesData(null)
+    setEvo(null)
+    setPreEvo(null)
 
     async function pokemonData() {
-      const [pokeres, speciesres]= await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`), fetch(`https://pokeapi.co/api/v2/pokemon-species/${selected}`)])
+      const [pokeres, speciesres] = await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`), 
+      fetch(`https://pokeapi.co/api/v2/pokemon-species/${selected}`)
+    ])
 
       const pokedata = await pokeres.json();
       const speciesdata = await speciesres.json()
 
       setPokeData(pokedata)
       setSpeciesData(speciesdata)
+      
+      const evochain = await fetch(speciesdata?.['evolution_chain']?.url)
+      const evochaindata = await evochain.json()
+
+      const preevoName = evochaindata?.chain?.species?.name
+      const currentName = evochaindata?.chain?.['evolves_to']?.[0]?.species.name
+      const evoName = evochaindata?.chain?.['evolves_to']?.[0]?.['evolves_to']?.[0]?.species?.name
+
+      const [preEvoRes, currentRes, evoRes] = await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${preevoName}`),
+        fetch(`https://pokeapi.co/api/v2/pokemon/${currentName}`),
+        fetch(`https://pokeapi.co/api/v2/pokemon/${evoName}`)
+      ])
+
+      const preEvoData = await preEvoRes.json()
+      const currentData = await currentRes.json()
+      const evoData = await evoRes.json()
+
+      setPreEvo(preEvoData)
+      setCurrentEvo(currentData)
+      setEvo(evoData)
+
+      console.log(preevoName)
+      console.log(evoName)
 
       cries.src = pokedata?.cries?.latest || ''
       cries.play().catch(()=>{})
     }
     console.log(selected)
+    
     console.log(pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'])
     console.log(String(pokeData?.id).padStart(3, '0'))
     pokemonData()
@@ -80,7 +111,7 @@ const [dex, setDex] = useState([])
 
   return (
     <div>
-
+{/* main section */}
       {main && 
       <div id='main-page'>
         <header  header className="py-2 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex justify-center items-center border-b-3 border-black"
@@ -126,16 +157,16 @@ const [dex, setDex] = useState([])
       }
       
       
-
+{/* details section */}
       {!main && 
       <div id="details">
         <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' : 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' } py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
           <div className='flex gap-16'>
-            <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev+1 : prev)}}>◀</div>
+            <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev-1 : prev)}}>◀</div>
             <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(1); setDetails(1);}}>DETAILS</span>
-            <span className={`${page === 2 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(2); setDetails(2);}}>AREA</span>
+            <span className={`${page === 2 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(2); setDetails(2);}}>EVOLUTION</span>
             <span className={`${page === 3 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(3); setDetails(3);}}>FORMS</span>
-            <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==3 ? prev+1 : prev);setDetails(prev=>details!==3 ? prev+1 : prev)}}>▶</div>
+            <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==3 ? prev+1 : prev); setDetails(prev=> details!==3 ? prev+1 : prev)}}>▶</div>
           </div>
 
           <div>
@@ -145,7 +176,7 @@ const [dex, setDex] = useState([])
         </header>
 
         {details===1 && 
-        <div id='details-content' className='flex flex-col'>
+        <div id='details-content' className='flex flex-col gap-2'>
           <div id="details-content-top" className='flex gap-60 mt-2'>
             <div id="left" className='relative'>
               <div id='back-button' className='bg-white flex absolute border-3 rounded-md m-2'> 
@@ -162,7 +193,7 @@ const [dex, setDex] = useState([])
                 <div className='bg-red-500 flex gap-2 items-center border-b-3 border-red-200  py-1 px-6 text-white'>
                   <img src="/images/pokeball.png" alt="" id="pokeball" className='w-10 h-10'/>
                   <span>{pokeData ? String(pokeData?.id).padStart(3, '0'):''}</span>
-                  <span>{selected?.replace(/^\w/, c=>c.toUpperCase())}</span>
+                  <span>{selected?.replace(/^\w/, c=>c.toUpperCase()).replaceAll(/[-]/g,' ')}</span>
                 </div>
                 <span className={`${!speciesData ? 'bg-red-500' : 'py-1 px-6'} `}>{speciesData?.genera?.[7]?.genus}</span>
                 
@@ -176,7 +207,7 @@ const [dex, setDex] = useState([])
             </div>
 
           </div>
-          <div id="details-content-bottom" className='rounded-md border-2 border black mx-2 mb-2 flex justify-between bg-white'>
+          <div id="details-content-bottom" className='rounded-md border-2 border-black mx-2 flex justify-between bg-white'>
             <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
             <span className='border-y-2 border-red-200 text-center text-3xl w-full p-4 h-45'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'] || 'TBD'}</span>
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
@@ -184,7 +215,40 @@ const [dex, setDex] = useState([])
       
         </div>}
 
-        
+        {details===2 &&
+        <div className='flex justify-evenly mt-1/2'>
+          <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />
+          <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />
+          <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />          
+        </div>
+        }
+
+        {details===3 &&
+        <div className='flex flex-col gap-2'>
+          <div id="forms-top" className='flex gap-15 justify-center pt-3 '>
+            <div className='w-25/100 border-5 border-black rounded-md'>
+              <img className='border-x border-5 border-[#bf6de3] w-full bg-white'
+              src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} alt="" />
+            </div>
+
+            <div className='w-25/100 border-5 border-black rounded-md relative'>
+              <img className='border-x border-5 border-[#bf6de3] w-full bg-white absolute bottom-0'  
+              src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['back_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/back/132.png'} alt="" />
+            </div>
+              
+          </div>
+
+          <div id="forms-bottom" className='rounded-md border-3 border-black mx-2 flex justify-between bg-white'>
+            <div className='bg-[#bf6de3] border-r-3 border-[#dcafef] w-6'></div>
+            <div className='border-y-2 border-[#dcafef] text-3xl w-full h-45 flex items-center relative'>
+              <img src={pokeData?.sprites?.versions?.['generation-viii']?.icons?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/132.png'} alt="chibi"
+              className='absolute left-1/20 top-1/2 transform -translate-x-1/2 -translate-y-1/2' />
+              <span className='m-auto'>{selected?.replace(/^\w/,c=>c.toUpperCase()).replaceAll(/[-]/g,' ')}</span>
+            </div>
+            <div className='bg-[#bf6de3] border-l-3 border-[#dcafef] w-6'></div>
+          </div>
+        </div>
+        }
 
         
       </div>
