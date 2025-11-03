@@ -6,7 +6,12 @@ function App() {
 const [dex, setDex] = useState([])
   const [pokeData, setPokeData] = useState()
   const [speciesData, setSpeciesData] = useState()
+
+  const [currentEvoName, setCurrentEvoName] = useState()
+  const [evoName, setEvoName] = useState()
+
   const [selected, setSelected] = useState('arceus');
+
   const [preEvo, setPreEvo] = useState()
   const [currentEvo, setCurrentEvo] = useState()
   const [evo, setEvo] = useState()
@@ -43,8 +48,11 @@ const [dex, setDex] = useState([])
   useEffect(()=>{
     setPokeData(null)
     setSpeciesData(null)
-    setEvo(null)
     setPreEvo(null)
+    setCurrentEvo(null)
+    setEvo(null)
+
+    
 
     async function pokemonData() {
       const [pokeres, speciesres] = await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${selected}`), 
@@ -60,13 +68,18 @@ const [dex, setDex] = useState([])
       const evochain = await fetch(speciesdata?.['evolution_chain']?.url)
       const evochaindata = await evochain.json()
 
-      const preevoName = evochaindata?.chain?.species?.name
-      const currentName = evochaindata?.chain?.['evolves_to']?.[0]?.species.name
-      const evoName = evochaindata?.chain?.['evolves_to']?.[0]?.['evolves_to']?.[0]?.species?.name
+      const preevoname = evochaindata?.chain?.species?.name || 'ditto'
+      const currentname = evochaindata?.chain?.['evolves_to']?.[0]?.species.name || 'ditto'
+      const evoname = evochaindata?.chain?.['evolves_to']?.[0]?.['evolves_to']?.[0]?.species?.name || 'ditto'
 
-      const [preEvoRes, currentRes, evoRes] = await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${preevoName}`),
-        fetch(`https://pokeapi.co/api/v2/pokemon/${currentName}`),
-        fetch(`https://pokeapi.co/api/v2/pokemon/${evoName}`)
+      setCurrentEvoName(currentname)
+      setEvoName(evoname);
+
+
+
+      const [preEvoRes, currentRes, evoRes] = await Promise.all([fetch(`https://pokeapi.co/api/v2/pokemon/${preevoname}`),
+        fetch(`https://pokeapi.co/api/v2/pokemon/${currentname}`),
+        fetch(`https://pokeapi.co/api/v2/pokemon/${evoname}`)
       ])
 
       const preEvoData = await preEvoRes.json()
@@ -77,8 +90,8 @@ const [dex, setDex] = useState([])
       setCurrentEvo(currentData)
       setEvo(evoData)
 
-      console.log(preevoName)
-      console.log(evoName)
+      console.log(preevoname)
+      console.log(evoname)
 
       cries.src = pokedata?.cries?.latest || ''
       cries.play().catch(()=>{})
@@ -159,8 +172,8 @@ const [dex, setDex] = useState([])
       
 {/* details section */}
       {!main && 
-      <div id="details">
-        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' : 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' } py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
+      <div id="details" >
+        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
           <div className='flex gap-16'>
             <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev-1 : prev)}}>◀</div>
             <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(1); setDetails(1);}}>DETAILS</span>
@@ -175,16 +188,16 @@ const [dex, setDex] = useState([])
           
         </header>
 
+        <div id='back-button' className='bg-white flex absolute border-3 rounded-md m-2 z-1'> 
+            <div className={`${details===1?'bg-red-500 border-r-3 border-red-200 w-6': details===2?'bg-green-500 border-r-3 border-green-200':details===3?'bg-[#bf6de3] border-r-3 border-[#dcafef]':null} w-6`}></div>
+              <span className={`${details===1? 'border-red-200 hover:bg-red-200': details===2? 'border-green-200 hover:bg-green-200': details===3? 'border-[#dcafef] hover:bg-[#dcafef]':null} py-2 px-4 border-y-3 cursor-pointer`} onClick={()=>setMain(prev=>!prev)}>Back</span>
+            <div className={`${details===1?'bg-red-500 border-l-3 border-red-200 w-6': details===2?'bg-green-500 border-l-3 border-green-200':details===3?'bg-[#bf6de3] border-l-3 border-[#dcafef]' :null} w-6`}></div>
+        </div>
+
         {details===1 && 
         <div id='details-content' className='flex flex-col gap-2'>
           <div id="details-content-top" className='flex gap-60 mt-2'>
             <div id="left" className='relative'>
-              <div id='back-button' className='bg-white flex absolute border-3 rounded-md m-2'> 
-                  <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-                    <span className='py-2 px-4 border-y-3 border-red-200 hover:bg-red-200 cursor-pointer' onClick={()=>setMain(prev=>!prev)}>Back</span>
-                  <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
-              </div>
-
               <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-62 ml-22 mt-22' />
             </div>
 
@@ -216,10 +229,10 @@ const [dex, setDex] = useState([])
         </div>}
 
         {details===2 &&
-        <div className='flex justify-evenly mt-1/2'>
+        <div className='flex justify-evenly mt-[15%]'>
           <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />
-          <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />
-          <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />          
+          {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />} 
+          {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />} 
         </div>
         }
 
