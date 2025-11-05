@@ -7,6 +7,7 @@ const [dex, setDex] = useState([])
   const [pokeData, setPokeData] = useState()
   const [speciesData, setSpeciesData] = useState()
 
+  const [preEvoName, setPreEvoName] = useState()
   const [currentEvoName, setCurrentEvoName] = useState()
   const [evoName, setEvoName] = useState()
 
@@ -72,6 +73,8 @@ const [dex, setDex] = useState([])
       const currentname = evochaindata?.chain?.['evolves_to']?.[0]?.species.name || 'ditto'
       const evoname = evochaindata?.chain?.['evolves_to']?.[0]?.['evolves_to']?.[0]?.species?.name || 'ditto'
 
+    
+      setPreEvoName(preevoname)
       setCurrentEvoName(currentname)
       setEvoName(evoname);
 
@@ -127,12 +130,12 @@ const [dex, setDex] = useState([])
 {/* main section */}
       {main && 
       <div id='main-page'>
-        <header  header className="py-2 bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex justify-center items-center border-b-3 border-black"
+        <header  header className="py-2 h-[6vh] bg-gradient-to-b from-red-500 to-red-900 font-mono text-white flex justify-center items-center border-b-3 border-black"
         style={{textShadow: '2px 2px 6px black'}}>
             Pokédex
         </header>
-        <div className="flex py-4 px-2 h-[540px]">
-          <div id="basic-info" className=' flex flex-col  items-center w-1/2 gap-25'>
+        <div className="flex py-4 px-2 h-[90vh]">
+          <div id="basic-info" className=' flex flex-col  items-center w-[50vw] h-[90vh] justify-between'>
             <div id="pokemon-name" className='bg-white flex border-3 rounded-md'>
                 <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
                 <input ref={inputRef} className='py-2 px-4 border-y-3 border-red-200 placeholder-black text-center' 
@@ -142,14 +145,14 @@ const [dex, setDex] = useState([])
                 {/* <span className='py-2 px-4 border-y-3 border-red-200'>{ selected.replace(/^\w/, c=>c.toUpperCase()).replaceAll('-', ' ') || 'Ditto...'}</span>   */}
                 <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
             </div>
-            <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-50 h-50' />
-            <div className='bg-white flex border-3 rounded-md'>
+            <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-100 h-100' />
+            <div id='details-btn' className='bg-white flex border-3 rounded-md'>
               <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
               <span className='py-2 px-4 border-y-3 border-red-200 hover:bg-red-200 cursor-pointer' onClick={()=>setMain(prev=>!prev)}>Details</span>
               <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
             </div>
           </div> 
-          <div id="pokemon-list" className='border-3 border-black bg-white w-1/2 rounded-md flex flex-col gap-2 overflow-y-auto px-1 relative' >
+          <div id="pokemon-list" className='border-3 border-black bg-white min-w-[50vw] min-h-[90vh] rounded-md flex flex-col gap-2 overflow-y-auto px-1 relative' >
             <div className='bg-red-500 w-12'></div>
             {dex.length ? 
             dex.map((pokemon, index)=>{
@@ -173,7 +176,7 @@ const [dex, setDex] = useState([])
 {/* details section */}
       {!main && 
       <div id="details" >
-        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
+        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900 h-[6vh]' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
           <div className='flex gap-16'>
             <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev-1 : prev)}}>◀</div>
             <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(1); setDetails(1);}}>DETAILS</span>
@@ -195,10 +198,10 @@ const [dex, setDex] = useState([])
         </div>
 
         {details===1 && 
-        <div id='details-content' className='flex flex-col gap-2'>
-          <div id="details-content-top" className='flex gap-60 mt-2'>
+        <div id='details-content' className='flex flex-col justify-between h-[90vh]'>
+          <div id="details-content-top" className='flex justify-around items-center px-[2vw] pt-[4%]'>
             <div id="left" className='relative'>
-              <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-62 ml-22 mt-22' />
+              <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-80' />
             </div>
 
             <div id="right" className='flex flex-col gap-16'>
@@ -222,17 +225,17 @@ const [dex, setDex] = useState([])
           </div>
           <div id="details-content-bottom" className='rounded-md border-2 border-black mx-2 flex justify-between bg-white'>
             <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-            <span className='border-y-2 border-red-200 text-center text-3xl w-full p-4 h-45'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'] || 'TBD'}</span>
+            <span className='border-y-2 border-red-200 text-center text-4xl w-full p-4 h-[30vh]'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'] || 'TBD'}</span>
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
         </div>}
 
         {details===2 &&
-        <div className='flex justify-evenly mt-[15%]'>
-          <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />
-          {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />} 
-          {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']} alt="" />} 
+        <div className='flex justify-evenly items-center mt-[5%]'>
+          <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-1/6 border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===preEvoName ? prev : preEvoName)} alt="base-evolution" />
+          {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-1/6 border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===currentEvoName ? prev : currentEvoName)} alt="stage-1-evolution" />} 
+          {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-1/6 border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===evoName ? prev : evoName)} alt="stage-2-evolution" />} 
         </div>
         }
 
