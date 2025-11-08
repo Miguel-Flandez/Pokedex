@@ -176,8 +176,8 @@ const [dex, setDex] = useState([])
 {/* details section */}
       {!main && 
       <div id="details" >
-        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } h-[6vh] py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer`}>
-          <div className='flex gap-16 max-md:gap-8'>
+        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } h-[6vh] py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer `}>
+          <div className='flex gap-[5vw] text-[1vw] max-sm:text-[3vw]'>
             <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev-1 : prev)}}>◀</div>
             <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(1); setDetails(1);}}>DETAILS</span>
             <span className={`${page === 2 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(2); setDetails(2);}}>EVOLUTION</span>
@@ -199,12 +199,12 @@ const [dex, setDex] = useState([])
 
         {details===1 && 
         <div id='details-content' className='flex flex-col justify-between h-[90vh]'>
-          <div id="details-content-top" className='flex justify-around items-center px-[2vw] pt-[5vh] max-xl:pt-[10vh]'>
+          <div id="details-content-top" className='flex justify-around items-center px-[2vw] pt-[5vh] max-xl:pt-[10vh] max-sm:flex-col'>
             <div id="left" className='relative'>
-              <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[20vw]' />
+              <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[20vw] max-sm:w-[50vw]' />
             </div>
 
-            <div id="right" className='flex flex-col gap-16'>
+            <div id="right" className='flex flex-col gap-[5vw]'>
               <div id="pokemon-nametag" className='flex flex-col border-3 rounded-md bg-white text-4xl max-md:text-xl'>
                 <div className='bg-red-500 flex gap-2 items-center border-b-3 border-red-200  py-1 px-6 text-white'>
                   <img src="/images/pokeball.png" alt="" id="pokeball" className='w-10 h-10'/>
@@ -212,8 +212,8 @@ const [dex, setDex] = useState([])
                   <span>{selected?.replace(/^\w/, c=>c.toUpperCase()).replaceAll(/[-]/g,' ')}</span>
                 </div>
                 <span className={`${!speciesData ? 'bg-red-500' : 'py-1 px-6'} `}>{speciesData?.genera?.[7]?.genus}</span>
-                
               </div>
+
               <div id="type" className={`${typeColors[pokeData?.types?.[0]?.type?.name] || 'border-0 border-none'} border-2 border-black rounded-md py-6 text-white text-center text-4xl`}>
                 <span id="type" className=''>
                 {pokeData?.types?.[0]?.type?.name?.replaceAll(/[A-Za-z]/g, c=>c.toUpperCase())}
@@ -232,23 +232,23 @@ const [dex, setDex] = useState([])
         </div>}
 
         {details===2 &&
-        <div id='evolutions' className='flex justify-evenly items-center pt-[20vh] max-xl:pt-[30vh]'>
-          <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===preEvoName ? prev : preEvoName)} alt="base-evolution" />
-          {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===currentEvoName ? prev : currentEvoName)} alt="stage-1-evolution" />} 
-          {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===evoName ? prev : evoName)} alt="stage-2-evolution" />} 
+        <div id='evolutions' className={`${currentEvoName!=='ditto' ? 'max-sm:pt-[10vh]' : 'max-sm:pt-[30vh]'} flex justify-center items-center pt-[20vh] max-xl:pt-[30vh] max-sm:flex-col`} >
+          <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===preEvoName ? prev : preEvoName)} alt="base-evolution" />
+          {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===currentEvoName ? prev : currentEvoName)} alt="stage-1-evolution" />} 
+          {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===evoName ? prev : evoName)} alt="stage-2-evolution" />} 
         </div>
         }
 
         {details===3 &&
         <div id="forms" className='flex flex-col justify-between h-[90vh]'>
-          <div id="forms-top" className='flex gap-15 justify-center pt-[5vh] max-xl:pt-[20vh] '>
-            <div className='w-25/100 border-5 border-black rounded-md'>
+          <div id="forms-top" className='flex gap-[5vw] justify-center items-center pt-[5vh] max-xl:pt-[20vh] max-sm:flex-col max-sm:pt-[10vh]'>
+            <div className='w-[25vw] max-sm:w-[50vw] border-5 border-black rounded-md'>
               <img className='border-x border-5 border-[#bf6de3] w-full bg-white'
               src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} alt="" />
             </div>
 
-            <div className='w-25/100 border-5 border-black rounded-md relative'>
-              <img className='border-x border-5 border-[#bf6de3] w-full bg-white absolute bottom-0'  
+            <div className='w-[25vw] max-sm:w-[50vw] border-5 border-black rounded-md relative'>
+              <img className='border-x border-5 border-[#bf6de3] w-full bg-white'  
               src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['back_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/back/132.png'} alt="" />
             </div>
               
