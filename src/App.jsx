@@ -176,7 +176,7 @@ const [dex, setDex] = useState([])
 {/* details section */}
       {!main && 
       <div id="details" >
-        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } h-[6vh] py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer `}>
+        <header className={`${details===1 ? 'bg-gradient-to-b from-red-500 to-red-900' :details===2?'bg-gradient-to-b from-green-500 to-green-900' : details===3? 'bg-gradient-to-b from-[#bf6de3] to-[#744289]' :null } h-[6vh] py-2 px-8 font-mono text-white flex items-center border-b-3 border-black cursor-pointer transition-colors duration-500`}>
           <div className='flex gap-[5vw] text-[1vw] max-sm:text-[3vw]'>
             <div className='hover:text-black' onClick={()=>{setPage(prev=> page!==1 ? prev-1 : prev); setDetails(prev=>details!==1 ? prev-1 : prev)}}>◀</div>
             <span className={`${page === 1 ? 'underline decoration-2' : null } hover:text-black`} onClick={()=>{setPage(1); setDetails(1);}}>DETAILS</span>
@@ -192,10 +192,14 @@ const [dex, setDex] = useState([])
         </header>
 
         <div id='back-button' className='bg-white flex absolute border-3 rounded-md m-2 z-1'> 
-            <div className={`${details===1?'bg-red-500 border-r-3 border-red-200 w-6': details===2?'bg-green-500 border-r-3 border-green-200':details===3?'bg-[#bf6de3] border-r-3 border-[#dcafef]':null} w-6`}></div>
-              <span className={`${details===1? 'border-red-200 hover:bg-red-200': details===2? 'border-green-200 hover:bg-green-200': details===3? 'border-[#dcafef] hover:bg-[#dcafef]':null} py-2 px-4 border-y-3 cursor-pointer`} onClick={()=>setMain(prev=>!prev)}>Back</span>
-            <div className={`${details===1?'bg-red-500 border-l-3 border-red-200 w-6': details===2?'bg-green-500 border-l-3 border-green-200':details===3?'bg-[#bf6de3] border-l-3 border-[#dcafef]' :null} w-6`}></div>
+            <div className={`${details===1?'bg-red-500 border-r-3 border-red-200 w-6': details===2?'bg-green-500 border-r-3 border-green-200':details===3?'bg-[#bf6de3] border-r-3 border-[#dcafef]':null} w-6 transition-colors duration-500`}></div>
+              <span className={`${details===1? 'border-red-200 hover:bg-red-200': details===2? 'border-green-200 hover:bg-green-200': details===3? 'border-[#dcafef] hover:bg-[#dcafef]':null} py-2 px-4 border-y-3 cursor-pointer transition-colors duration-500`} onClick={()=>setMain(prev=>!prev)}>Back</span>
+            <div className={`${details===1?'bg-red-500 border-l-3 border-red-200 w-6': details===2?'bg-green-500 border-l-3 border-green-200':details===3?'bg-[#bf6de3] border-l-3 border-[#dcafef]' :null} w-6 transition-colors duration-500`}></div>
         </div>
+
+        {/* {!preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] && <div id="loader" className='fixed top-0 left-0 w-screen h-screen bg-white z-50'>
+          <img src="/images/pokeball.png" alt="pokeball" className='transition-all ' />
+        </div>} */}
 
         {details===1 && 
         <div id='details-content' className='flex flex-col justify-between h-[90vh]'>
@@ -225,14 +229,14 @@ const [dex, setDex] = useState([])
           </div>
           <div id="details-content-bottom" className='rounded-md border-2 border-black mx-2 flex justify-between bg-white'>
             <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-            <span className='border-y-2 border-red-200 text-center text-3xl max-xl:text-lg w-full p-4 h-[30vh]'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'] || 'TBD'}</span>
+            <span className='border-y-2 border-red-200 text-center text-3xl max-xl:text-lg w-full p-4 h-[30vh]'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'].replaceAll(/[\f]/g, ' ') || 'TBD'}</span>
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
         </div>}
 
         {details===2 &&
-        <div id='evolutions' className={`${currentEvoName!=='ditto' ? 'max-sm:pt-[10vh]' : 'max-sm:pt-[30vh]'} flex justify-center items-center pt-[20vh] max-xl:pt-[30vh] max-sm:flex-col`} >
+        <div id='evolutions' className={`${currentEvoName!=='ditto' ? 'max-sm:pt-[10vh]' : 'max-sm:pt-[30vh]'} flex justify-center items-center pt-[20vh] max-sm:flex-col`} >
           <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===preEvoName ? prev : preEvoName)} alt="base-evolution" />
           {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===currentEvoName ? prev : currentEvoName)} alt="stage-1-evolution" />} 
           {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===evoName ? prev : evoName)} alt="stage-2-evolution" />} 
@@ -240,15 +244,15 @@ const [dex, setDex] = useState([])
         }
 
         {details===3 &&
-        <div id="forms" className='flex flex-col justify-between h-[90vh]'>
-          <div id="forms-top" className='flex gap-[5vw] justify-center items-center pt-[5vh] max-xl:pt-[20vh] max-sm:flex-col max-sm:pt-[10vh]'>
+        <div id="forms" className='flex flex-col gap-[5vw] h-[90vh]'>
+          <div id="forms-top" className='flex gap-[5vw] justify-center items-center pt-[5vh] max-xl:pt-[5vh] max-sm:flex-col max-sm:pt-[10vh]'>
             <div className='w-[25vw] max-sm:w-[50vw] border-5 border-black rounded-md'>
-              <img className='border-x border-5 border-[#bf6de3] w-full bg-white'
+              <img className='border-x border-5 border-[#bf6de3] w-full lg:h-[50vh] bg-white'
               src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} alt="" />
             </div>
 
             <div className='w-[25vw] max-sm:w-[50vw] border-5 border-black rounded-md relative'>
-              <img className='border-x border-5 border-[#bf6de3] w-full bg-white'  
+              <img className='border-x border-5 border-[#bf6de3] w-full lg:h-[50vh] bg-white' 
               src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['back_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/back/132.png'} alt="" />
             </div>
               
