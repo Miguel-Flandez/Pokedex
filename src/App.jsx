@@ -1,5 +1,6 @@
 import './App.css'
 import { useState, useEffect, useRef } from "react";
+import { pixelPokeball, ditto } from '@/assets';
 
 function App() {
 
@@ -11,7 +12,7 @@ const [dex, setDex] = useState([])
   const [currentEvoName, setCurrentEvoName] = useState()
   const [evoName, setEvoName] = useState()
 
-  const [selected, setSelected] = useState('arceus');
+  const [selected, setSelected] = useState('pikachu');
 
   const [preEvo, setPreEvo] = useState()
   const [currentEvo, setCurrentEvo] = useState()
@@ -19,6 +20,9 @@ const [dex, setDex] = useState([])
   const [page, setPage] = useState(1)
   const [main, setMain] = useState(true);
   const [details, setDetails] = useState(1);
+
+
+  
 
   const inputRef = useRef(null)
   
@@ -93,18 +97,20 @@ const [dex, setDex] = useState([])
       setCurrentEvo(currentData)
       setEvo(evoData)
 
-      console.log(preevoname)
-      console.log(evoname)
 
       cries.src = pokedata?.cries?.latest || ''
       cries.play().catch(()=>{})
     }
-    console.log(selected)
-    
-    console.log(pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'])
-    console.log(String(pokeData?.id).padStart(3, '0'))
     pokemonData()
   },[selected])
+
+  const sprite = pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'];
+  const backSprite = pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['back_default'];
+  const preEvoSprite = preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'];
+  const currentEvoSprite = currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']
+  const evoSprite = evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default']
+  const iconSprite = pokeData?.sprites?.versions?.['generation-viii']?.icons?.['front_default']
+
 
 
   useEffect(()=>{
@@ -145,7 +151,7 @@ const [dex, setDex] = useState([])
                 {/* <span className='py-2 px-4 border-y-3 border-red-200'>{ selected.replace(/^\w/, c=>c.toUpperCase()).replaceAll('-', ' ') || 'Ditto...'}</span>   */}
                 <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
             </div>
-            <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[33vw] max-sm:w-full' />
+            <img src={ sprite || pixelPokeball} className='w-[33vw] max-sm:w-full' />
             <div id='details-btn' className='bg-white flex border-3 rounded-md max-sm:text-[10px]'>
               <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
               <span className='py-2 px-4 border-y-3 border-red-200 hover:bg-red-200 cursor-pointer' onClick={()=>setMain(prev=>!prev)}>Details</span>
@@ -163,8 +169,7 @@ const [dex, setDex] = useState([])
             })
             :
             <div>
-              <img className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8/10' src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/493.png' alt="Arceus" />
-              <h1 className='text-center'>Creating all Pokemon...</h1>
+              <img className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 animate-bounce' src={pixelPokeball} alt="Arceus" />
             </div>
           }
           </div>
@@ -205,7 +210,7 @@ const [dex, setDex] = useState([])
         <div id='details-content' className='flex flex-col justify-between h-[90vh]'>
           <div id="details-content-top" className='flex justify-around items-center px-[2vw] pt-[5vh] max-xl:pt-[10vh] max-sm:flex-col'>
             <div id="left" className='relative'>
-              <img src={ pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[20vw] max-sm:w-[50vw]' />
+              <img src={ sprite || ditto} className='w-[20vw] max-sm:w-[50vw]' />
             </div>
 
             <div id="right" className='flex flex-col gap-[5vw]'>
@@ -229,7 +234,7 @@ const [dex, setDex] = useState([])
           </div>
           <div id="details-content-bottom" className='rounded-md border-2 border-black mx-2 flex justify-between bg-white'>
             <div className='bg-red-500 border-r-3 border-red-200 w-6'></div>
-            <span className='border-y-2 border-red-200 text-center text-3xl max-xl:text-lg w-full p-4 h-[30vh]'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'].replaceAll(/[\f]/g, ' ') || 'TBD'}</span>
+            <span className='border-y-2 border-red-200 text-center text-3xl max-xl:text-lg w-full p-4 h-[30vh]'>{speciesData?.['flavor_text_entries']?.find(ft=>ft?.language?.name==='en')?.['flavor_text'].replaceAll(/[\f]/g, ' ') || 'No Data...'}</span>
             <div className='bg-red-500 border-l-3 border-red-200 w-6'></div>
           </div>
       
@@ -237,9 +242,9 @@ const [dex, setDex] = useState([])
 
         {details===2 &&
         <div id='evolutions' className={`${currentEvoName!=='ditto' ? 'max-sm:pt-[10vh]' : 'max-sm:pt-[30vh]'} flex justify-center items-center pt-[20vh] max-sm:flex-col`} >
-          <img src={preEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===preEvoName ? prev : preEvoName)} alt="base-evolution" />
-          {currentEvoName!=='ditto' && <img src={currentEvo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===currentEvoName ? prev : currentEvoName)} alt="stage-1-evolution" />} 
-          {evoName!=='ditto' && <img src={evo?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===evoName ? prev : evoName)} alt="stage-2-evolution" />} 
+          <img src={preEvoSprite || pixelPokeball} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===preEvoName ? prev : preEvoName)} alt="base-evolution" />
+          {currentEvoName!=='ditto' && <img src={currentEvoSprite || pixelPokeball} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===currentEvoName ? prev : currentEvoName)} alt="stage-1-evolution" />} 
+          {evoName!=='ditto' && <img src={evoSprite || pixelPokeball} className='w-[25vw] max-sm:w-[50vw] max-lg:w-[33vw] border-5 rounded-lg border-transparent hover:border-red-400' onClick={()=>setSelected(prev=>prev===evoName ? prev : evoName)} alt="stage-2-evolution" />} 
         </div>
         }
 
@@ -248,12 +253,12 @@ const [dex, setDex] = useState([])
           <div id="forms-top" className='flex gap-[5vw] justify-center items-center pt-[5vh] max-xl:pt-[5vh] max-sm:flex-col max-sm:pt-[10vh]'>
             <div className='w-[25vw] max-sm:w-[50vw] border-5 border-black rounded-md'>
               <img className='border-x border-5 border-[#bf6de3] w-full lg:h-[50vh] bg-white'
-              src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/diamond-pearl/132.png'} alt="" />
+              src={sprite || ditto} alt="" />
             </div>
 
             <div className='w-[25vw] max-sm:w-[50vw] border-5 border-black rounded-md relative'>
               <img className='border-x border-5 border-[#bf6de3] w-full lg:h-[50vh] bg-white' 
-              src={pokeData?.sprites?.versions?.['generation-v']?.['black-white']?.['back_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/back/132.png'} alt="" />
+              src={backSprite || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/back/132.png'} alt="" />
             </div>
               
           </div>
@@ -261,7 +266,7 @@ const [dex, setDex] = useState([])
           <div id="forms-bottom" className='rounded-md border-3 border-black mx-2 flex justify-between bg-white'>
             <div className='bg-[#bf6de3] border-r-3 border-[#dcafef] w-6'></div>
             <div className='border-y-2 border-[#dcafef] text-3xl w-full h-[20vh] flex items-center relative'>
-              <img src={pokeData?.sprites?.versions?.['generation-viii']?.icons?.['front_default'] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/132.png'} alt="chibi"
+              <img src={iconSprite || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/132.png'} alt="chibi"
               className='absolute left-1/20 top-1/2 transform -translate-x-1/2 -translate-y-1/2' />
               <span className='m-auto'>{selected?.replace(/^\w/,c=>c.toUpperCase()).replaceAll(/[-]/g,' ')}</span>
             </div>
