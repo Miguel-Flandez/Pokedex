@@ -1,0 +1,5 @@
+export {default as Details} from './Details.jsx'
+export {default as Evolution} from './Evolution.jsx'
+export {default as Forms} from './Forms.jsx'
+export {default as Header} from './Header.jsx'
+export {default as MainDex} from './MainDex.jsx'
